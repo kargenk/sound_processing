@@ -55,3 +55,31 @@ def dft(start, x, N):
             imag = - np.sin(2 * np.pi * k * n / N)
             X[k] += x[start + n] * complex(real, imag)
     return X
+
+def get_db_hz(x):
+    """
+    離散フーリエ変換を用いて，周波数とそのパワースペクトルを得る関数．
+    
+    Parameter
+    ----------
+    x : array
+        信号
+    
+    returns
+    ----------
+    db : array
+        パワースペクトル
+    hz : array
+        周波数
+    """
+    
+    F = dft(0, x, 1000)      # 離散フーリエ変換(DFT)
+    amp = np.abs(F)            # 振幅スペクトル
+    power = amp ** 2           # パワースペクトル(振幅スペクトルの二乗)
+    db = 10 * np.log10(power)  # 利得
+
+    hz = []
+    for i, _ in enumerate(F):
+        hz.append(16000 * (i / 1000))  # 周波数(Hz)
+
+    return db, hz
